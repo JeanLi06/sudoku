@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import Square from "./Square";
 
 class App extends React.Component {
 
@@ -24,14 +25,13 @@ class App extends React.Component {
     // Change la valeur sur la grille, aux coordonnees x,y
     setValueAtCoord = (x, y) => {
         // On fait une copie de la board pour ne pas la modifier directement
-        let board = this.state.board.slice();
-
+        let board = [...this.state.board];
         board[0] = 33;
         this.setState({board: board});
     };
 
     //Récupère les coordonnéees de la case que l'on a cliquée
-    getCoordonatesOfClickedSquare = (square_index) => {
+    getCoordonates = (square_index) => {
         console.log(square_index);
         console.log({
             x: square_index % 9,
@@ -42,14 +42,12 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-                {this.state.board.map((square_value, square_index) =>
-                    <span>
-                        <button className="square" id={square_index}
-                                onClick={() => this.getCoordonatesOfClickedSquare(square_index)}>
-                    {square_value}
-                    </button>
-                    </span>
-                )}
+                {this.state.board.map((square_value, square_index) => (
+                    <Square square_value={square_value}
+                            square_index={square_index}
+                            getCoordonates={this.getCoordonates}
+                    />
+                ))}
             </div>
         )
     }
