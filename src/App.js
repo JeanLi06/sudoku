@@ -31,23 +31,22 @@ class App extends React.Component {
     };
 
     //Récupère les coordonnéees de la case que l'on a cliquée
-    getCoordonatesOfClickedSquare = (index) => {
-        // console.log(index.index);
+    getCoordonatesOfClickedSquare = (square_index) => {
+        console.log(square_index);
         console.log({
-            x: index.index % 9,
-            y: Math.ceil(index.index / 9) - 1
+            x: square_index % 9,
+            y: Math.floor(square_index / 9)
         });
     };
 
     render() {
         return (
             <div className="App">
-                {this.state.board.map((item, index) =>
+                {this.state.board.map((square_value, square_index) =>
                     <span>
-                        {/*<button className="square" id={index} onClick={this.getCoordonatesOfClickedSquare}>*/}
-                        <button className="square" id={index}
-                                onClick={() => this.getCoordonatesOfClickedSquare({index})}>
-                    {item}
+                        <button className="square" id={square_index}
+                                onClick={() => this.getCoordonatesOfClickedSquare(square_index)}>
+                    {square_value}
                     </button>
                     </span>
                 )}
