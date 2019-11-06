@@ -1,14 +1,28 @@
 .App {
     text-align: center;
     display: inline-block;
-    width: 241px;
+    width: 245px;
     height: auto;
 }
 
 .square {
-    /*display: inline-block;*/
     width: 25px;
     height: 25px;
-    background-color: antiquewhite;
+    background-color: #f4f9d9;
     vertical-align: bottom;
+    padding: 0px;
+}
+
+.span-square{
+    display: inline-block;
+    width: auto;
+    height: auto;
+}
+
+.span-column{
+    border-right: solid 2px #636364;
+}
+
+.span-row{
+    border-bottom: solid 2px #636364;
 }

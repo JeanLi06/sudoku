@@ -3,7 +3,6 @@ import './App.css';
 import Square from "./Square";
 
 class App extends React.Component {
-
     //Un grille de sudoku facile et valide
     state = {
         board: [
@@ -45,9 +44,14 @@ class App extends React.Component {
                 {this.state.board.map((square_value, square_index) => (
                     <Square square_value={square_value}
                             square_index={square_index}
+                            key={square_index}
                             getCoordonates={this.getCoordonates}
                     />
                 ))}
+                <form action="">
+                    <input type="text" defaultValue="-"/>
+                    <input type="submit" value="Valider"/>
+                </form>
             </div>
         )
     }
