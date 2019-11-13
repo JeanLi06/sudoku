@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
-import Square from "./Square";
+import Square from "./Square/Square";
+import Input from "./Input/Input";
 
 class App extends React.Component {
     //Un grille de sudoku facile et valide
@@ -18,7 +19,8 @@ class App extends React.Component {
             null, 6, 8, 7, null, null, 3, null, 9,
             1, 2, null, null, 3, null, 5, null, 7
         ],
-        clickedSquare: ''
+        clickedSquare: '',
+        inputValue: 'Valeur'
     };
 
     // Change la valeur sur la grille, aux coordonnees x,y
@@ -38,20 +40,33 @@ class App extends React.Component {
         });
     };
 
+    //Récupère la valeur de la case cliquée, et la passe à l'input
+    getValue = (square_value) => {
+        console.log(square_value);
+    };
+
+    clickedSquareHandler = () => {
+        console.log("Evènement: ");
+    };
+
     render() {
         return (
-            <div className="App">
-                {this.state.board.map((square_value, square_index) => (
-                    <Square square_value={square_value}
-                            square_index={square_index}
-                            key={square_index}
-                            getCoordonates={this.getCoordonates}
-                    />
-                ))}
-                <form action="">
-                    <input type="text" defaultValue="-"/>
-                    <input type="submit" value="Valider"/>
-                </form>
+            <div>
+                <h1>Sudoku</h1>
+                <div className="Board">
+                    {this.state.board.map((square_value, square_index, event) => (
+                        <Square square_value={square_value}
+                                square_index={square_index}
+                                key={square_index}
+                                getCoordonates={this.getCoordonates}
+                                getValue={this.getValue}
+                                clickedSquareHandler={this.clickedSquareHandler}
+                        />
+                    ))}
+                </div>
+                <div>
+                    <Input value={this.state.inputValue}/>
+                </div>
             </div>
         )
     }

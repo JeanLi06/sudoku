@@ -1,17 +1,11 @@
-.App {
+.Board {
     text-align: center;
     display: inline-block;
     width: 245px;
     height: auto;
 }
 
-.square {
-    width: 25px;
-    height: 25px;
-    background-color: #f4f9d9;
-    vertical-align: bottom;
-    padding: 0px;
-}
+
 
 .span-square{
     display: inline-block;
