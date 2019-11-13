@@ -5,7 +5,13 @@
     height: auto;
 }
 
+.allowed-hover{
+    background-color: aquamarine;
+}
 
+.allowed-hover:hover{
+    background-color: chartreuse;
+}
 
 .span-square{
     display: inline-block;

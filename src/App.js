@@ -43,6 +43,7 @@ class App extends React.Component {
     //Récupère la valeur de la case cliquée, et la passe à l'input
     getValue = (square_value) => {
         console.log(square_value);
+        return square_value;
     };
 
     clickedSquareHandler = () => {

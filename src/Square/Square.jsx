@@ -12,7 +12,9 @@ const Square = ({square_index, square_value, getCoordonates, getValue, clickedSq
         ((((square_index - 2) % 9 === 0 || (square_index - 5) % 9 === 0
         )) ? 'span-column' : '')
         }>
-        <button className="Square"
+        <button className={"Square" +
+        (getValue(square_value) === null ? " allowed-hover" : '')
+        }
                 id={square_index}
                 key={square_index}
                 onClick={() => {
@@ -20,9 +22,7 @@ const Square = ({square_index, square_value, getCoordonates, getValue, clickedSq
                     getValue(square_value);
                     clickedSquareHandler();
                 }}
-                onChange={() => {
-                    console.log('change');
-                }}>
+        >
             {square_value}
         </button>
         </span>

@@ -1,4 +1,5 @@
 import React from "react";
+import './Input.css'
 
 //Gestion de la valeur de la case cliquée
 const input = (props) => {
@@ -12,7 +13,7 @@ const input = (props) => {
         cursor: 'pointer'
     };
     return (
-        <ul style={ulUserChoice}
+        <ul className="Input" style={ulUserChoice}
             onClick={(event) => {
                 const userValueChoice = event.target.innerHTML;
                 if (!isNaN(userValueChoice)) {
