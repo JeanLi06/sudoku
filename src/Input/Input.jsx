@@ -1,7 +1,7 @@
 import React from "react";
 import './Input.css'
 
-//Gestion de la valeur de la case cliquée
+//Gestion de la valeur choisie par l'utilisateur
 const input = ({setValueAtSquare}) => {
     const ulUserChoice = {
         padding: '0'

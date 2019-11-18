@@ -1,4 +1,5 @@
 import React from 'react';
+import 'uniqid';
 import './App.css';
 import Square from "./Square/Square";
 import Input from "./Input/Input";
@@ -19,17 +20,27 @@ class App extends React.Component {
             null, 6, 8, 7, null, null, 3, null, 9,
             1, 2, null, null, 3, null, 5, null, 7
         ],
-        clickedSquare: null,
+        clickedSquare: null, //la case qui vient d'être cliquée
+        chosenSquares: [], //l'historique des cases choisies {index, valeur}
         clickedUserNumber: null
     };
 
-    // Remplace la valeur dans la board, à l'index donné par la valeur donnée, et efface le clicjedSquare
+    // Remplace la valeur dans la board, à l'index présent dans le state par la valeur transmise,
+    // met à jour l'historique des cases, et efface le clickedSquare
     setValueAtSquare = (value) => {
         if (!isNaN(value) && this.state.clickedSquare !== null) {
             let board = [...this.state.board];
             board[this.state.clickedSquare] = value;
             this.setState({board: board});
+            let chosenSquares = [...this.state.chosenSquares];
+            chosenSquares.push({
+                index: this.state.clickedSquare,
+                value: value
+            });
+            this.setState({chosenSquares: chosenSquares});
             this.setState({clickedSquare: null});
+            console.log(chosenSquares);
+
         }
     };
 
@@ -60,6 +71,12 @@ class App extends React.Component {
         return this.state.clickedSquare;
     };
 
+    // Génère une ID unique, avec concaténation de l'index (pour les keys de liste). Utilise le module npm uniqid
+    generateUniqueID = (index) =>{
+        var uniqid = require('uniqid');
+        return uniqid(index);
+    };
+
     clickedSquareHandler = (square_index) => {
         if (this.getValue(square_index) === null) {
             this.setState({clickedSquare: square_index});
@@ -78,7 +95,7 @@ class App extends React.Component {
                 {this.state.board.map((square_value, square_index) => (
                     <Square square_value={square_value}
                             square_index={square_index}
-                            key={square_index}
+                            key={this.generateUniqueID(square_index)}
                             getCoordonates={this.getCoordonates}
                             getValue={this.getValue}
                             clickedSquareHandler={this.clickedSquareHandler}
