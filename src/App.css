@@ -6,12 +6,14 @@
 }
 
 .allowed-hover{
-    background-color: aquamarine;
+    background-color: rgba(166, 43, 255, 0.65);
 }
 
 .allowed-hover:hover{
     background-color: chartreuse;
 }
+
+
 
 .span-square{
     display: inline-block;

@@ -19,57 +19,77 @@ class App extends React.Component {
             null, 6, 8, 7, null, null, 3, null, 9,
             1, 2, null, null, 3, null, 5, null, 7
         ],
-        clickedSquare: '',
-        inputValue: 'Valeur'
+        clickedSquare: null,
+        clickedUserNumber: null
+    };
+
+    // Remplace la valeur dans la board, à l'index donné par la valeur donnée, et efface le clicjedSquare
+    setValueAtSquare = (value) => {
+        if (!isNaN(value) && this.state.clickedSquare !== null) {
+            let board = [...this.state.board];
+            board[this.state.clickedSquare] = value;
+            this.setState({board: board});
+            this.setState({clickedSquare: null});
+        }
     };
 
     // Change la valeur sur la grille, aux coordonnees x,y
-    setValueAtCoord = (x, y) => {
+    setValueAtCoord = (x, y, value) => {
         // On fait une copie de la board pour ne pas la modifier directement
         let board = [...this.state.board];
-        board[0] = 33;
+        board[0] = value;
         this.setState({board: board});
     };
 
     //Récupère les coordonnéees de la case que l'on a cliquée
     getCoordonates = (square_index) => {
-        console.log(square_index);
-        console.log({
-            x: square_index % 9,
-            y: Math.floor(square_index / 9)
-        });
+        // console.log(square_index);
+        // console.log({
+        //     x: square_index % 9,
+        //     y: Math.floor(square_index / 9)
+        // });
     };
 
-    //Récupère la valeur de la case cliquée, et la passe à l'input
-    getValue = (square_value) => {
-        console.log(square_value);
-        return square_value;
+    //Récupère la valeur de la case dont on donne l'index
+    getValue = (square_index) => {
+        return this.state.board[square_index];
     };
 
-    clickedSquareHandler = () => {
-        console.log("Evènement: ");
+    //Retourne l'index de la case cliquée, stockée dans le state
+    getClickedSquare = () => {
+        return this.state.clickedSquare;
+    };
+
+    clickedSquareHandler = (square_index) => {
+        if (this.getValue(square_index) === null) {
+            this.setState({clickedSquare: square_index});
+            return square_index;
+        } else {
+            this.setState({clickedSquare: null});
+            return null;
+        }
     };
 
     render() {
-        return (
-            <div>
-                <h1>Sudoku</h1>
-                <div className="Board">
-                    {this.state.board.map((square_value, square_index, event) => (
-                        <Square square_value={square_value}
-                                square_index={square_index}
-                                key={square_index}
-                                getCoordonates={this.getCoordonates}
-                                getValue={this.getValue}
-                                clickedSquareHandler={this.clickedSquareHandler}
-                        />
-                    ))}
-                </div>
-                <div>
-                    <Input value={this.state.inputValue}/>
-                </div>
+        return <>
+            <h1>Sudoku</h1>
+            <p>Clické : {this.state.clickedSquare}</p>
+            <div className="Board">
+                {this.state.board.map((square_value, square_index) => (
+                    <Square square_value={square_value}
+                            square_index={square_index}
+                            key={square_index}
+                            getCoordonates={this.getCoordonates}
+                            getValue={this.getValue}
+                            clickedSquareHandler={this.clickedSquareHandler}
+                            getClickedSquare={this.getClickedSquare}
+                    />
+                ))}
             </div>
-        )
+            <div>
+                <Input setValueAtSquare={this.setValueAtSquare}/>
+            </div>
+        </>
     }
 }
 
