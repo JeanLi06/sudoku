@@ -21,6 +21,17 @@ class App extends React.Component {
             null, 6, 8, 7, null, null, 3, null, 9,
             1, 2, null, null, 3, null, 5, null, 7
         ],
+        zones : [
+            [0, 1, 2, 9, 10, 11, 18, 19, 20],
+            [3, 4, 5, 12, 13, 14, 21, 22, 23],
+            [6, 7, 8, 15, 16, 17, 24, 25, 26],
+            [27, 28, 29, 36, 37, 38, 45, 46, 47],
+            [30, 31, 32, 39, 40, 41, 48, 49, 50],
+            [33, 34, 35, 42, 43, 44, 51, 52, 53],
+            [54, 55, 56, 63, 64, 65, 72, 73, 74],
+            [57, 58, 59, 66, 67, 68, 75, 76, 77],
+            [60, 61, 62, 69, 70, 71, 78, 79, 80]
+        ],
         clickedSquare: null, //la case qui vient d'être cliquée
         chosenSquares: [], //l'historique des cases choisies {index, valeur}
         clickedUserNumber: null
@@ -78,6 +89,33 @@ class App extends React.Component {
         return uniqid(index);
     };
 
+    /*Teste si une des 9 zones est valide (que des chiffres uniques 1-9)
+    1|2|3
+    4|5|6
+    7|8|9
+    */
+
+    isZoneValid = (zone_number) => {
+        //9 zones (0-8), répérées avec le square_index
+        //On sélectionne la zone choisie
+        let zone_to_test = this.state.zones[zone_number];
+        return this.isArrayFromSudokuValid(zone_to_test);
+    };
+
+    //Permet de tester si une ligne, une colonne, ou une zone est valide
+    // c.a.d. éléments uniques de 1 à 9
+    isArrayFromSudokuValid = (array_to_test) => {
+        // On récupère les valeurs de cette zone
+        let values_in_zone = array_to_test.map((value) => Math.abs(this.state.board[value]));
+        //On enlève les répétitions (dans un Set, les valeurs sont uniques...)
+        const unique_values_in_zone = [...new Set(values_in_zone)];
+        // On réduit la zone à un produit des ses éléments
+        let reduced_zone = unique_values_in_zone.reduce((accumulator, currentValue) => accumulator + currentValue);
+        //    Si la somme des éléments uniques est égal à 45, la zone est valide (1+2+3...+9)
+        console.log(reduced_zone);
+        return reduced_zone === 45;
+    };
+
     clickedSquareHandler = (square_index) => {
         //On ne peut changer qu'un case vide, ou autorisée (valeur stockée < 0 )
         if (this.getValue(square_index) === null || this.getValue(square_index) < 0) {
@@ -92,7 +130,7 @@ class App extends React.Component {
     //Retourne true si valeur du square a été choisie (<0), sinon il s'agit
     //d'une valeur d'origine non modifiable
     isChoosen = (square_value) => {
-        console.log(square_value);
+        // console.log(square_value);
         if (square_value < 0) {
             console.log('true');
             return true;
@@ -104,9 +142,10 @@ class App extends React.Component {
     };
 
     render() {
+        this.isZoneValid(4);
         return <>
             <h1>Sudoku</h1>
-            <p>Clické : {this.state.clickedSquare}</p>
+            <p>Restants : {this.state.board.filter(item => item === null).length}</p>
             <div className="Board">
                 {this.state.board.map((square_value, square_index) => (
                     <Square square_value={square_value}
