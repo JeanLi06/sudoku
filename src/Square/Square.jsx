@@ -13,18 +13,18 @@ const Square = ({square_index, square_value, getCoordonates, getValue, clickedSq
     }>
         {/* Si la case ne contient rien, on peut changer la couleur au survol */}
         <button className={"Square" +
-        (square_value === null ? " allowed-hover" : '') +
+        (square_value === null || square_value < 0 ? " allowed-hover" : '') +
+        (square_value < 0 ? " chosen-square" : '') +
         (square_index === getClickedSquare() ? " clicked-square" : '')
         }
                 id={square_index}
-                key={square_index}
                 onClick={() => {
                     getCoordonates(square_index);
                     getValue(square_value);
                     clickedSquareHandler(square_index);
                 }}
         >
-            {square_value}
+            {square_value !== null ? Math.abs(square_value) : null}
         </button>
         </span>;
 };

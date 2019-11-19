@@ -4,6 +4,7 @@ import './App.css';
 import Square from "./Square/Square";
 import Input from "./Input/Input";
 
+//Les valeurs choisies par l'utilisateur sont représentées avec des nombre négatifs dans board
 class App extends React.Component {
     //Un grille de sudoku facile et valide
     state = {
@@ -27,20 +28,20 @@ class App extends React.Component {
 
     // Remplace la valeur dans la board, à l'index présent dans le state par la valeur transmise,
     // met à jour l'historique des cases, et efface le clickedSquare
+    //La valeur choisie est stockée avec une valeur négative, pour la différenciée d'avec les valeurs d'origine.
     setValueAtSquare = (value) => {
         if (!isNaN(value) && this.state.clickedSquare !== null) {
             let board = [...this.state.board];
-            board[this.state.clickedSquare] = value;
+            board[this.state.clickedSquare] = value * -1;
             this.setState({board: board});
             let chosenSquares = [...this.state.chosenSquares];
             chosenSquares.push({
                 index: this.state.clickedSquare,
-                value: value
+                value: value * -1
             });
             this.setState({chosenSquares: chosenSquares});
             this.setState({clickedSquare: null});
-            console.log(chosenSquares);
-
+            // console.log(chosenSquares);
         }
     };
 
@@ -71,19 +72,34 @@ class App extends React.Component {
         return this.state.clickedSquare;
     };
 
-    // Génère une ID unique, avec concaténation de l'index (pour les keys de liste). Utilise le module npm uniqid
-    generateUniqueID = (index) =>{
+    // Génère une key unique, avec concaténation de l'index (pour les keys de liste). Utilise le module npm uniqid
+    generateUniqueKey = (index) => {
         var uniqid = require('uniqid');
         return uniqid(index);
     };
 
     clickedSquareHandler = (square_index) => {
-        if (this.getValue(square_index) === null) {
+        //On ne peut changer qu'un case vide, ou autorisée (valeur stockée < 0 )
+        if (this.getValue(square_index) === null || this.getValue(square_index) < 0) {
             this.setState({clickedSquare: square_index});
             return square_index;
         } else {
             this.setState({clickedSquare: null});
             return null;
+        }
+    };
+
+    //Retourne true si valeur du square a été choisie (<0), sinon il s'agit
+    //d'une valeur d'origine non modifiable
+    isChoosen = (square_value) => {
+        console.log(square_value);
+        if (square_value < 0) {
+            console.log('true');
+            return true;
+        }
+        if (square_value > 0) {
+            console.log('false');
+            return false;
         }
     };
 
@@ -95,9 +111,10 @@ class App extends React.Component {
                 {this.state.board.map((square_value, square_index) => (
                     <Square square_value={square_value}
                             square_index={square_index}
-                            key={this.generateUniqueID(square_index)}
+                            key={this.generateUniqueKey(square_index)}
                             getCoordonates={this.getCoordonates}
                             getValue={this.getValue}
+                            isChoosen={this.isChoosen}
                             clickedSquareHandler={this.clickedSquareHandler}
                             getClickedSquare={this.getClickedSquare}
                     />
