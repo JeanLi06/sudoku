@@ -21,7 +21,7 @@ class App extends React.Component {
             null, 6, 8, 7, null, null, 3, null, 9,
             1, 2, null, null, 3, null, 5, null, 7
         ],
-        zones : [
+        zones: [
             [0, 1, 2, 9, 10, 11, 18, 19, 20],
             [3, 4, 5, 12, 13, 14, 21, 22, 23],
             [6, 7, 8, 15, 16, 17, 24, 25, 26],
@@ -34,7 +34,7 @@ class App extends React.Component {
         ],
         clickedSquare: null, //la case qui vient d'être cliquée
         chosenSquares: [], //l'historique des cases choisies {index, valeur}
-        clickedUserNumber: null
+        clickedUserNumber: null //La valeur choisie
     };
 
     // Remplace la valeur dans la board, à l'index présent dans le state par la valeur transmise,
@@ -89,12 +89,25 @@ class App extends React.Component {
         return uniqid(index);
     };
 
+    //Retourne true si une array fournie est valide
+    // c.a.d. éléments uniques de 1 à 9
+    isArrayFromSudokuValid = (array_to_test) => {
+        // On récupère les valeurs de cette zone, en les passant  en absolu, et les null en 0
+        let values_in_array = array_to_test.map(item => item === null ? 0 : Math.abs(item));
+        //On enlève les répétitions (dans un Set, les valeurs sont uniques...)
+        const unique_values_in_zone = [...new Set(values_in_array)];
+        // On réduit la zone à une somme des ses éléments
+        let reduced_array = unique_values_in_zone.reduce((accumulator, currentValue) =>
+            accumulator + currentValue);
+        //    Si la somme des éléments uniques est égal à 45, la zone est valide (1+2+3...+9)
+        return reduced_array === 45;
+    };
+
     /*Teste si une des 9 zones est valide (que des chiffres uniques 1-9)
     1|2|3
     4|5|6
     7|8|9
     */
-
     isZoneValid = (zone_number) => {
         //9 zones (0-8), répérées avec le square_index
         //On sélectionne la zone choisie
@@ -102,18 +115,25 @@ class App extends React.Component {
         return this.isArrayFromSudokuValid(zone_to_test);
     };
 
-    //Permet de tester si une ligne, une colonne, ou une zone est valide
-    // c.a.d. éléments uniques de 1 à 9
-    isArrayFromSudokuValid = (array_to_test) => {
-        // On récupère les valeurs de cette zone
-        let values_in_zone = array_to_test.map((value) => Math.abs(this.state.board[value]));
-        //On enlève les répétitions (dans un Set, les valeurs sont uniques...)
-        const unique_values_in_zone = [...new Set(values_in_zone)];
-        // On réduit la zone à un produit des ses éléments
-        let reduced_zone = unique_values_in_zone.reduce((accumulator, currentValue) => accumulator + currentValue);
-        //    Si la somme des éléments uniques est égal à 45, la zone est valide (1+2+3...+9)
-        console.log(reduced_zone);
-        return reduced_zone === 45;
+    // retourne true si une ligne est valide c.a.d. éléments uniques de 1 à 9
+    isRowValid = (row_number) => {
+        //    On génère un tableau des square_index correspondants à la ligne (0-8)
+        let rowToTest = [];
+        for (let i = 0; i <= 8; i++) {
+            rowToTest.push(this.state.board[i + row_number * 9]);
+        }
+        return this.isArrayFromSudokuValid(rowToTest);
+    };
+
+    // retourne true si une colonne est valide c.a.d. éléments uniques de 1 à 9
+    iscolumnValid = (column_number) => {
+        //    On génère un tableau des square_index correspondants à la colonne (0-8)
+        let columnToTest = [];
+        for (let i = 0; i <= 8; i++) {
+            columnToTest.push(this.state.board[i * 9 + column_number]);
+        }
+        console.log(columnToTest);
+        console.log(this.isArrayFromSudokuValid(columnToTest));
     };
 
     clickedSquareHandler = (square_index) => {
@@ -132,17 +152,15 @@ class App extends React.Component {
     isChoosen = (square_value) => {
         // console.log(square_value);
         if (square_value < 0) {
-            console.log('true');
             return true;
         }
         if (square_value > 0) {
-            console.log('false');
             return false;
         }
     };
 
     render() {
-        this.isZoneValid(4);
+        this.iscolumnValid(8);
         return <>
             <h1>Sudoku</h1>
             <p>Restants : {this.state.board.filter(item => item === null).length}</p>

@@ -3,7 +3,7 @@ import './Square.css';
 
 //Définit une case de la grille de Sudoku, en générant une bodure
 // pour séparer les régions. Index de 0 à 80.
-const Square = ({square_index, square_value, getCoordonates, getValue, clickedSquareHandler, getClickedSquare}) => {
+const Square = ({square_index, square_value, getCoordonates, getValue, clickedSquareHandler, getClickedSquare, isRowValid}) => {
     return <span className={"span-square " +
     (((square_index >= 18 && square_index <= 26) ||
         (square_index >= 45 && square_index <= 53)
