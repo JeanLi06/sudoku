@@ -3,8 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="6c092fac-eb65-40a2-ba01-9353ed007c3e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Square/Square.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Square/Square.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Input/Input.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Input/Input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Square/Square.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Square/Square.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,7 +34,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/node_modules/.bin/.eslintrc.json" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Square" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
@@ -48,6 +50,9 @@
     <property name="settings.editor.selected.configurable" value="settings.javascript.linters.eslint" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\laragon\www\sudoku2\src\Square" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\laragon\www\sudoku2\src\Square" />
     </key>
@@ -89,7 +94,8 @@
       <workItem from="1572626419177" duration="32668000" />
       <workItem from="1572951392164" duration="23638000" />
       <workItem from="1573115775822" duration="7419000" />
-      <workItem from="1573237423553" duration="73783000" />
+      <workItem from="1573237423553" duration="76387000" />
+      <workItem from="1574247818594" duration="8189000" />
     </task>
     <servers />
   </component>
@@ -101,7 +107,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
