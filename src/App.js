@@ -1,8 +1,8 @@
 import React from 'react';
 import 'uniqid';
 import './App.css';
-import Square from "./Square/Square";
 import Input from "./Input/Input";
+import Square from './Square/Square'
 
 //Les valeurs choisies par l'utilisateur sont représentées avec des nombre négatifs dans board
 class App extends React.Component {
@@ -180,6 +180,9 @@ class App extends React.Component {
             <div>
                 <Input setValueAtSquare={this.setValueAtSquare}/>
             </div>
+            <button style={{borderBottom: 'red solid 1px'}}>
+                test
+            </button>
         </>
     }
 }

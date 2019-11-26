@@ -1,12 +1,9 @@
 import React from 'react'
 import './Square.css'
 
-import styled from 'styled-components'
-
-
 //Définit une case de la grille de Sudoku, en générant une bodure
 // pour séparer les régions. Index de 0 à 80.
-const Square = ({
+const Cell = ({
                   square_index, square_value, getCoordonates, getValue,
                   clickedSquareHandler, getClickedSquare, isRowValid
                 }) => {
@@ -50,4 +47,4 @@ const Square = ({
         </span>
 }
 
-export default Square
+export default Cell
