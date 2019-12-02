@@ -1,8 +1,8 @@
 import React from 'react';
 import 'uniqid';
 import './App.css';
-import Input from "./Input/Input";
-import Square from './Square/Square'
+import Input from "./components/Input";
+import Cell from './components/Cell'
 
 //Les valeurs choisies par l'utilisateur sont représentées avec des nombre négatifs dans board
 class App extends React.Component {
@@ -166,14 +166,14 @@ class App extends React.Component {
             <p>Restants : {this.state.board.filter(item => item === null).length}</p>
             <div className="Board">
                 {this.state.board.map((square_value, square_index) => (
-                    <Square square_value={square_value}
-                            square_index={square_index}
-                            key={this.generateUniqueKey(square_index)}
-                            getCoordonates={this.getCoordonates}
-                            getValue={this.getValue}
-                            isChoosen={this.isChoosen}
-                            clickedSquareHandler={this.clickedSquareHandler}
-                            getClickedSquare={this.getClickedSquare}
+                    <Cell square_value={square_value}
+                          square_index={square_index}
+                          key={this.generateUniqueKey(square_index)}
+                          getCoordonates={this.getCoordonates}
+                          getValue={this.getValue}
+                          isChoosen={this.isChoosen}
+                          clickedSquareHandler={this.clickedSquareHandler}
+                          getClickedSquare={this.getClickedSquare}
                     />
                 ))}
             </div>

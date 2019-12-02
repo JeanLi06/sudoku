@@ -9,18 +9,11 @@
     background-color: rgba(166, 43, 255, 0.47);
 }
 
-.span-square{
-    display: inline-block;
-    width: auto;
-    height: auto;
-}
-
-
 
 .span-column{
-    border-right: solid 2px #636364;
+    border-right: solid 3px rgb(106, 43, 176);
 }
 
 .span-row{
-    border-bottom: solid 2px #636364;
+    border-bottom: solid 3px rgb(106, 43, 176);
 }
