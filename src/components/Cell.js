@@ -1,16 +1,16 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
-import { arrowFunctionExpression } from '@babel/types'
+import styled from 'styled-components'
 
 //Définit une case de la grille de Sudoku, en générant une bodure
 // pour séparer les régions. Index de 0 à 80.
 const Cell = ({
-                  square_index, square_value, getCoordonates, getValue,
-                  clickedSquareHandler, getClickedSquare, isRowValid
-                }) => {
+                square_index, square_value, getCoordonates, getValue,
+                clickedSquareHandler, getClickedSquare,
+                validRows, validColumns, validZones
+              }) => {
 
-  const cellBackgroundColor = `#BADA55`
-  const cellHoverColor = `chartreuse`
+  const cellBackgroundColor = `#fedc10`
+  const cellHoverColor = `#BADA55`
   const zoneBordercolor = `solid 3px grey`
 
   const isClicked = () => {
@@ -35,23 +35,25 @@ const Cell = ({
   const hasBorderRight = () => {
     return (square_index - 2) % 9 === 0 || (square_index - 5) % 9 === 0 ? zoneBordercolor : null
   }
-  //Génération conditionnelle du style du bouton
+
   const Cell = styled.button`
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     vertical-align: bottom;
     padding: 0;
     display: inline-block;
+    border: 1px solid dimgray;
     
+  //Génération conditionnelle du style du bouton
   {border-bottom: ${hasBorderBottom()};
     
-    {border-right: ${hasBorderRight()};
+  {border-right: ${hasBorderRight()};
     
- { &:hover {background-color: ${isOverInputCell()};}
+  {&:hover {background-color: ${isOverInputCell()};}
       
   background-color: ${isAnInputCell()}; 
 
-   background-color: ${isClicked()};
+  background-color: ${isClicked()};
    
   //Les choix utilisateurs ont été codés avec des valeurs négatives...
   (square_value < 0) && {
@@ -59,29 +61,7 @@ const Cell = ({
     font-weight: bold;
     font-size: 19px;
     color: beige;}
-    
-
 `
-  // let button_style = ['Square']
-  // if ((square_index >= 18 && square_index <= 26) ||
-  //   (square_index >= 45 && square_index <= 53)) {
-  //   button_style.push('span-row')
-  // }
-  // if ((square_index - 2) % 9 === 0 || (square_index - 5) % 9 === 0) {
-  //   button_style.push('span-column')
-  // }
-  // /* Si la case ne contient rien, on peut autorise la couleur au survol */
-  // if (square_value === null || square_value < 0) {
-  //   button_style.push('allowed-hover')
-  // }
-  // //Les choix utilisateurs ont été codés avec des valeurs négatives...
-  // if (square_value < 0) {
-  //   button_style.push('chosen-square')
-  // }
-  // if (square_index === getClickedSquare()) {
-  //   button_style.push('clicked-square')
-  // }
-  // button_style = button_style.join(' ')
 
   return <Cell
     id={square_index}
@@ -89,6 +69,7 @@ const Cell = ({
       getCoordonates(square_index)
       getValue(square_value)
       clickedSquareHandler(square_index)
+
     }}
   >
     {square_value !== null ? Math.abs(square_value) : null}
