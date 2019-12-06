@@ -12,8 +12,11 @@ class App extends React.Component {
   //Un grille de sudoku facile et valide
   state = {
     board: [
+      //Original line :
       // 2, null, 9, null, 5, null, null, 1, 8,
+      //For debugging: choose 7 for empty cell of first line
       2, null, 9, 3, 5, 6, 4, 1, 8,
+      //
       6, null, 3, null, null, 4, 9, 5, null,
       4, null, null, null, null, 8, null, null, null,
 
@@ -70,22 +73,18 @@ class App extends React.Component {
       }
       this.setState(this.state.validColumns = validColumns)
     }
-    // console.log(this.state.validColumns)
-    // return this.state.validColumns
   }
 
   // génère un tableau des lignes valides
   testRows = () => {
+    console.log('testRows')
     let validRows = []
     for (let row = 0; row < 9; row++) {
       if (this.isRowValid(row)) {
         validRows.push(row)
       }
     }
-    this.setState({ validRows })
-    console.log('validrowsState ', this.state.validRows)
-    // console.log(this.state.validRows)
-    // return this.state.validRows
+    this.setState({validRows: validRows})
   }
 
   // génère un tableau des zones valides
@@ -104,7 +103,7 @@ class App extends React.Component {
   // Remplace la valeur dans la board, à l'index présent dans le state par la valeur transmise,
   // met à jour l'historique des cases (chosenSquares), et efface le numéro du clickedSquare
   //La valeur choisie est stockée avec une valeur négative, pour la différenciée d'avec les valeurs d'origine.
-  setValueAtSquare = (value) => {
+  setValueAtSquare = (event, value) => {
     if (value === 'X') {
       let board = [...this.state.board]
       board[this.state.clickedSquare] = null
@@ -124,7 +123,8 @@ class App extends React.Component {
       })
       this.setState({ chosenSquares: chosenSquares })
     }
-    this.setState({ clickedSquare: null })
+    //Comme setState est appelé de manière asychrone, il faut faire les test en callback
+    this.setState({ clickedSquare: null }, this.testValidity)
   }
 
   // Change la valeur sur la grille, aux coordonnees x,y
@@ -243,7 +243,6 @@ class App extends React.Component {
     board['board'].map((value, index) =>
       value != null ? board['solvedBoard'][index] * -1 : -1
     )
-    console.log(board['board'])
     this.setState(board)
   }
 
@@ -251,9 +250,7 @@ class App extends React.Component {
     return <>
       <h1>Sudoku</h1>
       <p>Restants : {this.state.board.filter(item => item === null).length}</p>
-      {this.isBoardSolved() &&
-      <Victory
-      />}
+      {this.isBoardSolved() && <Victory/>}
       <p>Zones Valides : {this.state.validZones.length}</p>
       <p>Colonnes valides : {this.state.validColumns.length} — Lignes Valides : {this.state.validRows.length} </p>
 
@@ -267,17 +264,13 @@ class App extends React.Component {
                 isChoosen={this.isChoosen}
                 clickedSquareHandler={this.clickedSquareHandler}
                 getClickedSquare={this.getClickedSquare}
-                validRows={this.state.validRows}
-                validColumns={this.state.validColumns}
-                validZones={this.state.validZones}
           />
         ))}
       </div>
       <div>
         <Input
           setValueAtSquare={this.setValueAtSquare}
-          testValidity={this.testValidity}
-          validRows={this.validRows}
+          testRows={this.testRows}
         />
       </div>
       <button

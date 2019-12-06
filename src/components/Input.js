@@ -6,7 +6,6 @@ const List = styled.ul`
 `
 const ListItem = styled.li`
   display: inline-block;
-  
 `
 const UserChoice = styled.button`
   cursor: pointer;
@@ -14,20 +13,13 @@ const UserChoice = styled.button`
   min-width: 30px;
   &:hover { background-color: chartreuse};
 `
-const isInValidRow = (validRows) => {
-  console.log('validrows ', validRows)
-}
-
 //Gestion de la valeur choisie par l'utilisateur
-const Input = ({ setValueAtSquare, testValidity, validRows }) => {
+const Input = ({ setValueAtSquare, testRows }) => {
   return <List
     onClick={(event) => {
       const userValueChoice = event.target.innerHTML
-      setValueAtSquare(userValueChoice)
-    }}
-    onMouseUp={() => {
-      testValidity()
-      isInValidRow(validRows)
+      setValueAtSquare(event, userValueChoice)
+
     }}
   >
     {['X', 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => {

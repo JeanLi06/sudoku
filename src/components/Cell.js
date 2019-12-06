@@ -69,7 +69,6 @@ const Cell = ({
       getCoordonates(square_index)
       getValue(square_value)
       clickedSquareHandler(square_index)
-
     }}
   >
     {square_value !== null ? Math.abs(square_value) : null}
