@@ -14,11 +14,13 @@ class App extends React.Component {
     board: [
       //Original line :
       // 2, null, 9, null, 5, null, null, 1, 8,
-      //For debugging: choose 7 for empty cell of first line
-      2, null, 9, 3, 5, 6, 4, 1, 8,
-      //
-      6, null, 3, null, null, 4, 9, 5, null,
-      4, null, null, null, null, 8, null, null, null,
+      //For debugging:
+      2, 7, 9, null, 5, null, null, 1, 8,
+      //Original line :
+      // 6, null, 3, null, null, 4, 9, 5, null,
+      6, 8, 3, null, null, 4, 9, 5, null,
+      // 4, null, null, null, null, 8, null, null, null,
+      4, 5, null, null, null, 8, null, null, null,
 
       null, null, null, null, 1, 3, null, 2, 6,
       8, null, null, 5, null, 7, null, null, 4,
@@ -84,7 +86,7 @@ class App extends React.Component {
         validRows.push(row)
       }
     }
-    this.setState({validRows: validRows})
+    this.setState({ validRows: validRows })
   }
 
   // génère un tableau des zones valides
@@ -96,8 +98,6 @@ class App extends React.Component {
       }
       this.setState(this.state.validZones = validZones)
     }
-    // console.log(this.state.validZones)
-    // return this.state.validZones
   }
 
   // Remplace la valeur dans la board, à l'index présent dans le state par la valeur transmise,
@@ -183,8 +183,13 @@ class App extends React.Component {
   isZoneValid = (zone_number) => {
     //9 zones (0-8), répérées avec le square_index
     //On sélectionne la zone choisie
+    let zone_values = []
     let zone_to_test = this.state.zones[zone_number]
-    return this.isArrayFromSudokuValid(zone_to_test)
+    for (let i = 0; i < 9; i++) {
+      zone_values.push(Math.abs(this.state.board[zone_to_test[i]]))
+    }
+    console.log('zone test: ', zone_values)
+    return this.isArrayFromSudokuValid(zone_values)
   }
 
   // retourne true si une ligne est valide c.a.d. éléments uniques de 1 à 9
