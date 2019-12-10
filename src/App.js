@@ -11,6 +11,19 @@ import Input from './components/Input'
 class App extends React.Component {
   //Un grille de sudoku facile et valide
   state = {
+    initialBoard: [
+      2, null, 9, null, 5, null, null, 1, 8,
+      6, null, 3, null, null, 4, 9, 5, null,
+      4, null, null, null, null, 8, null, null, null,
+
+      null, null, null, null, 1, 3, null, 2, 6,
+      8, null, null, 5, null, 7, null, null, 4,
+      9, 1, null, 8, 4, null, null, null, null,
+
+      null, null, null, 4, null, null, null, null, 1,
+      null, 6, 8, 7, null, null, 3, null, 9,
+      1, 2, null, null, 3, null, 5, null, 7
+    ],
     board: [
       2, null, 9, null, 5, null, null, 1, 8,
       6, null, 3, null, null, 4, 9, 5, null,
@@ -239,7 +252,8 @@ class App extends React.Component {
     let state = { ...this.state }
     let result = []
     for (let index = 0; index <= 80; index++) {
-      result.push(state['board'][index] === null ? state['solvedBoard'][index] * -1 : state['board'][index])
+      // result.push(state['board'][index] === null ? state['solvedBoard'][index] * -1 : state['board'][index])
+      result.push(state['initialBoard'][index] === null ? state['solvedBoard'][index] * -1 : state['initialBoard'][index])
     }
     this.setState({ board: result }, () => this.testValidity())
   }
@@ -258,7 +272,6 @@ class App extends React.Component {
     return <>
       <h1>Sudoku</h1>
       <p>Restants : {this.state.board.filter(item => item === null).length}</p>
-      {this.isBoardSolved() && <Victory/>}
       <p>Zones Valides : {this.state.validZones.length}</p>
       <p>Colonnes valides : {this.state.validColumns.length} — Lignes Valides : {this.state.validRows.length} </p>
 
@@ -281,7 +294,7 @@ class App extends React.Component {
           testRows={this.testRows}
         />
       </div>
-      <button
+      {!this.isBoardSolved() && <button
         style={{
           backgroundColor: 'darkorange',
           color: 'white',
@@ -289,7 +302,8 @@ class App extends React.Component {
         }}
         onClick={this.solveBoard}>
         Résoudre !
-      </button>
+      </button>}
+      {this.isBoardSolved() && <Victory/>}
     </>
   }
 }
