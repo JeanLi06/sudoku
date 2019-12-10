@@ -4,21 +4,22 @@ import styled from 'styled-components'
 const List = styled.ul`
   padding: 0;
 `
-const ListItem = styled.li`
-  display: inline-block;
-`
 const UserChoice = styled.button`
+  font-family: Montserrat;
   cursor: pointer;
   min-height: 30px;
   min-width: 30px;
   &:hover { background-color: chartreuse};
 `
+const ListItem = styled.li`
+  display: inline-block;
+`
 //Gestion de la valeur choisie par l'utilisateur
-const Input = ({ setValueAtSquare, testRows }) => {
+const Input = ({ setValueAtCell, testRows }) => {
   return <List
     onClick={(event) => {
       const userValueChoice = event.target.innerHTML
-      setValueAtSquare(event, userValueChoice)
+      setValueAtCell(event, userValueChoice)
 
     }}
   >

@@ -12,15 +12,9 @@ class App extends React.Component {
   //Un grille de sudoku facile et valide
   state = {
     board: [
-      //Original line :
-      // 2, null, 9, null, 5, null, null, 1, 8,
-      //For debugging:
-      2, 7, 9, null, 5, null, null, 1, 8,
-      //Original line :
-      // 6, null, 3, null, null, 4, 9, 5, null,
-      6, 8, 3, null, null, 4, 9, 5, null,
-      // 4, null, null, null, null, 8, null, null, null,
-      4, 5, null, null, null, 8, null, null, null,
+      2, null, 9, null, 5, null, null, 1, 8,
+      6, null, 3, null, null, 4, 9, 5, null,
+      4, null, null, null, null, 8, null, null, null,
 
       null, null, null, null, 1, 3, null, 2, 6,
       8, null, null, 5, null, 7, null, null, 4,
@@ -52,8 +46,8 @@ class App extends React.Component {
       [57, 58, 59, 66, 67, 68, 75, 76, 77],
       [60, 61, 62, 69, 70, 71, 78, 79, 80]
     ],
-    clickedSquare: null, //la case qui vient d'être cliquée
-    chosenSquares: [], //l'historique des cases choisies {index, valeur}
+    clickedCell: null, //la case qui vient d'être cliquée
+    chosenCells: [], //l'historique des cases choisies {index, valeur}
     clickedUserNumber: null, //La valeur choisie
     validRows: [],
     validColumns: [],
@@ -79,7 +73,6 @@ class App extends React.Component {
 
   // génère un tableau des lignes valides
   testRows = () => {
-    console.log('testRows')
     let validRows = []
     for (let row = 0; row < 9; row++) {
       if (this.isRowValid(row)) {
@@ -101,30 +94,30 @@ class App extends React.Component {
   }
 
   // Remplace la valeur dans la board, à l'index présent dans le state par la valeur transmise,
-  // met à jour l'historique des cases (chosenSquares), et efface le numéro du clickedSquare
+  // met à jour l'historique des cases (chosenCells), et efface le numéro du clickedCell
   //La valeur choisie est stockée avec une valeur négative, pour la différenciée d'avec les valeurs d'origine.
-  setValueAtSquare = (event, value) => {
+  setValueAtCell = (event, value) => {
     if (value === 'X') {
       let board = [...this.state.board]
-      board[this.state.clickedSquare] = null
-      let chosenSquares = [...this.state.chosenSquares]
-      chosenSquares.pop()
-      this.setState({ chosenSquares: chosenSquares })
+      board[this.state.clickedCell] = null
+      let chosenCells = [...this.state.chosenCells]
+      chosenCells.pop()
+      this.setState({ chosenCells: chosenCells })
       this.setState({ board: board })
     } else if
-    (!isNaN(value) && this.state.clickedSquare !== null) {
+    (!isNaN(value) && this.state.clickedCell !== null) {
       let board = [...this.state.board]
-      board[this.state.clickedSquare] = value * -1
+      board[this.state.clickedCell] = value * -1
       this.setState({ board: board })
-      let chosenSquares = [...this.state.chosenSquares]
-      chosenSquares.push({
-        index: this.state.clickedSquare,
+      let chosenCells = [...this.state.chosenCells]
+      chosenCells.push({
+        index: this.state.clickedCell,
         value: value * -1
       })
-      this.setState({ chosenSquares: chosenSquares })
+      this.setState({ chosenCells: chosenCells })
     }
     //Comme setState est appelé de manière asychrone, il faut faire les test en callback
-    this.setState({ clickedSquare: null }, this.testValidity)
+    this.setState({ clickedCell: null }, this.testValidity)
   }
 
   // Change la valeur sur la grille, aux coordonnees x,y
@@ -136,22 +129,22 @@ class App extends React.Component {
   }
 
   //Récupère les coordonnéees de la case que l'on a cliquée
-  getCoordonates = (square_index) => {
-    // console.log(square_index);
+  getCoordonates = (cell_index) => {
+    // console.log(cell_index);
     // console.log({
-    //     x: square_index % 9,
-    //     y: Math.floor(square_index / 9)
+    //     x: cell_index % 9,
+    //     y: Math.floor(cell_index / 9)
     // });
   }
 
   //Récupère la valeur de la case dont on donne l'index
-  getValue = (square_index) => {
-    return this.state.board[square_index]
+  getValue = (cell_index) => {
+    return this.state.board[cell_index]
   }
 
   //Retourne l'index de la case cliquée, stockée dans le state
-  getClickedSquare = () => {
-    return this.state.clickedSquare
+  getClickedCell = () => {
+    return this.state.clickedCell
   }
 
   // Génère une key unique, avec concaténation de l'index (pour les keys de liste). Utilise le module npm uniqid
@@ -181,20 +174,19 @@ class App extends React.Component {
   7|8|9
   */
   isZoneValid = (zone_number) => {
-    //9 zones (0-8), répérées avec le square_index
+    //9 zones (0-8), répérées avec le cell_index
     //On sélectionne la zone choisie
     let zone_values = []
     let zone_to_test = this.state.zones[zone_number]
     for (let i = 0; i < 9; i++) {
       zone_values.push(Math.abs(this.state.board[zone_to_test[i]]))
     }
-    console.log('zone test: ', zone_values)
     return this.isArrayFromSudokuValid(zone_values)
   }
 
   // retourne true si une ligne est valide c.a.d. éléments uniques de 1 à 9
   isRowValid = (row_number) => {
-    //    On génère un tableau des square_index correspondants à la ligne (0-8)
+    //    On génère un tableau des cell_index correspondants à la ligne (0-8)
     let rowToTest = []
     for (let i = 0; i <= 8; i++) {
       rowToTest.push(this.state.board[i + row_number * 9])
@@ -204,7 +196,7 @@ class App extends React.Component {
 
   // retourne true si une colonne est valide c.a.d. éléments uniques de 1 à 9
   isColumnValid = (column_number) => {
-    //    On génère un tableau des square_index correspondants à la colonne (0-8)
+    //    On génère un tableau des cell_index correspondants à la colonne (0-8)
     let columnToTest = []
     for (let i = 0; i <= 8; i++) {
       columnToTest.push(this.state.board[i * 9 + column_number])
@@ -215,40 +207,51 @@ class App extends React.Component {
   // Pour tester si on a gagné, on teste toutes les zonnes
   isBoardSolved = () => {
     let won = []
-    for (let zone_number = 0; zone_number < 9; zone_number++) {
+    for (let zone_number = 0; zone_number <= 8; zone_number++) {
       won.push(this.isZoneValid(zone_number))
     }
     return won.every(zone => zone === true)
   }
 
-  clickedSquareHandler = (square_index) => {
+  clickedCellHandler = (cell_index) => {
     //On ne peut changer qu'un case vide, ou autorisée (valeur stockée < 0 )
-    if (this.getValue(square_index) === null || this.getValue(square_index) < 0) {
-      this.setState({ clickedSquare: square_index })
-      return square_index
+    if (this.getValue(cell_index) === null || this.getValue(cell_index) < 0) {
+      this.setState({ clickedCell: cell_index })
+      return cell_index
     } else {
-      this.setState({ clickedSquare: null })
+      this.setState({ clickedCell: null })
       return null
     }
   }
 
-  //Retourne true si valeur du square a été choisie (<0), sinon il s'agit
+  //Retourne true si valeur du cell a été choisie (<0), sinon il s'agit
   //d'une valeur d'origine non modifiable
-  isChoosen = (square_value) => {
-    if (square_value < 0) {
+  isChoosen = (cell_value) => {
+    if (cell_value < 0) {
       return true
     }
-    if (square_value > 0) {
+    if (cell_value > 0) {
       return false
     }
   }
 
   solveBoard = () => {
-    let board = { ...this.state }
-    board['board'].map((value, index) =>
-      value != null ? board['solvedBoard'][index] * -1 : -1
-    )
-    this.setState(board)
+    let state = { ...this.state }
+    let result = []
+    for (let index = 0; index <= 80; index++) {
+      result.push(state['board'][index] === null ? state['solvedBoard'][index] * -1 : state['board'][index])
+    }
+    this.setState({ board: result }, () => this.testValidity())
+  }
+
+  //retourne un tableau dont les valeurs ont été mélangées aléatoirement
+  getShuffledArray = arr => {
+    const newArr = arr.slice()
+    for (let i = newArr.length - 1; i > 0; i--) {
+      const rand = Math.floor(Math.random() * (i + 1));
+      [newArr[i], newArr[rand]] = [newArr[rand], newArr[i]]
+    }
+    return newArr
   }
 
   render () {
@@ -260,21 +263,21 @@ class App extends React.Component {
       <p>Colonnes valides : {this.state.validColumns.length} — Lignes Valides : {this.state.validRows.length} </p>
 
       <div className="Board">
-        {this.state.board.map((square_value, square_index) => (
-          <Cell square_value={square_value}
-                square_index={square_index}
-                key={this.generateUniqueKey(square_index)}
+        {this.state.board.map((cell_value, cell_index) => (
+          <Cell cell_value={cell_value}
+                cell_index={cell_index}
+                key={this.generateUniqueKey(cell_index)}
                 getCoordonates={this.getCoordonates}
                 getValue={this.getValue}
                 isChoosen={this.isChoosen}
-                clickedSquareHandler={this.clickedSquareHandler}
-                getClickedSquare={this.getClickedSquare}
+                clickedCellHandler={this.clickedCellHandler}
+                getClickedCell={this.getClickedCell}
           />
         ))}
       </div>
       <div>
         <Input
-          setValueAtSquare={this.setValueAtSquare}
+          setValueAtCell={this.setValueAtCell}
           testRows={this.testRows}
         />
       </div>

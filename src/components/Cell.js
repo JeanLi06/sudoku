@@ -4,36 +4,36 @@ import styled from 'styled-components'
 //Définit une case de la grille de Sudoku, en générant une bodure
 // pour séparer les régions. Index de 0 à 80.
 const Cell = ({
-                square_index, square_value, getCoordonates, getValue,
-                clickedSquareHandler, getClickedSquare,
+                cell_index, cell_value, getCoordonates, getValue,
+                clickedCellHandler, getClickedCell,
                 validRows, validColumns, validZones
               }) => {
 
-  const cellBackgroundColor = `#fedc10`
-  const cellHoverColor = `#BADA55`
-  const zoneBordercolor = `solid 3px grey`
+  const cell_background_color = `#fedc10`
+  const cell_hover_color = `#BADA55`
+  const zone_border_color = `solid 3px grey`
 
   const isClicked = () => {
-    return square_index === getClickedSquare() ? cellHoverColor : null
+    return cell_index === getClickedCell() ? cell_hover_color : null
   }
 
   /* Si la case est modifiable, on colorie */
   const isAnInputCell = () => {
-    return square_value === null || square_value < 0 ? cellBackgroundColor : null
+    return cell_value === null || cell_value < 0 ? cell_background_color : null
   }
 
   //   Changement de couleur : que sur les cases modifiables
   const isOverInputCell = () => {
-    return square_value === null || square_value < 0 ? cellHoverColor : null
+    return cell_value === null || cell_value < 0 ? cell_hover_color : null
   }
 
   const hasBorderBottom = () => {
-    return ((square_index >= 18 && square_index <= 26) ||
-    (square_index >= 45 && square_index <= 53) ? zoneBordercolor : null)
+    return ((cell_index >= 18 && cell_index <= 26) ||
+    (cell_index >= 45 && cell_index <= 53) ? zone_border_color : null)
   }
 
   const hasBorderRight = () => {
-    return (square_index - 2) % 9 === 0 || (square_index - 5) % 9 === 0 ? zoneBordercolor : null
+    return (cell_index - 2) % 9 === 0 || (cell_index - 5) % 9 === 0 ? zone_border_color : null
   }
 
   const Cell = styled.button`
@@ -43,6 +43,9 @@ const Cell = ({
     padding: 0;
     display: inline-block;
     border: 1px solid dimgray;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: Montserrat;
     
   //Génération conditionnelle du style du bouton
   {border-bottom: ${hasBorderBottom()};
@@ -56,7 +59,7 @@ const Cell = ({
   background-color: ${isClicked()};
    
   //Les choix utilisateurs ont été codés avec des valeurs négatives...
-  (square_value < 0) && {
+  (cell_value < 0) && {
     font-family: Consolas, sans-serif;
     font-weight: bold;
     font-size: 19px;
@@ -64,14 +67,14 @@ const Cell = ({
 `
 
   return <Cell
-    id={square_index}
+    id={cell_index}
     onClick={() => {
-      getCoordonates(square_index)
-      getValue(square_value)
-      clickedSquareHandler(square_index)
+      getCoordonates(cell_index)
+      getValue(cell_value)
+      clickedCellHandler(cell_index)
     }}
   >
-    {square_value !== null ? Math.abs(square_value) : null}
+    {cell_value !== null ? Math.abs(cell_value) : null}
   </Cell>
 }
 
