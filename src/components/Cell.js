@@ -19,12 +19,12 @@ const Cell = ({
 
   /* Si la case est modifiable, on colorie */
   const isAnInputCell = () => {
-    return cell_value === null || cell_value < 0 ? cell_background_color : null
+    return cell_value === null || cell_value <= 0 ? cell_background_color : null
   }
 
   //   Changement de couleur : que sur les cases modifiables
   const isOverInputCell = () => {
-    return cell_value === null || cell_value < 0 ? cell_hover_color : null
+    return cell_value === null || cell_value <= 0 ? cell_hover_color : null
   }
 
   const hasBorderBottom = () => {
@@ -74,7 +74,9 @@ const Cell = ({
       clickedCellHandler(cell_index)
     }}
   >
-    {cell_value !== null ? Math.abs(cell_value) : null}
+    {/*{(cell_value !== null || cell_value !== 0) ? Math.abs(cell_value) : null}*/}
+    {cell_value !== null  && Math.abs(cell_value) ||
+    cell_value === 0 && null}
   </Cell>
 }
 

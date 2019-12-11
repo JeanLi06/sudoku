@@ -13,29 +13,29 @@ class App extends React.Component {
   //Un grille de sudoku facile et valide
   state = {
     initialBoard: [
-      2, null, 9, null, 5, null, null, 1, 8,
-      6, null, 3, null, null, 4, 9, 5, null,
-      4, null, null, null, null, 8, null, null, null,
+      2, 0, 9, 0, 5, 0, 0, 1, 8,
+      6, 0, 3, 0, 0, 4, 9, 5, 0,
+      4, 0, 0, 0, 0, 8, 0, 0, 0,
 
-      null, null, null, null, 1, 3, null, 2, 6,
-      8, null, null, 5, null, 7, null, null, 4,
-      9, 1, null, 8, 4, null, null, null, null,
+      0, 0, 0, 0, 1, 3, 0, 2, 6,
+      8, 0, 0, 5, 0, 7, 0, 0, 4,
+      9, 1, 0, 8, 4, 0, 0, 0, 0,
 
-      null, null, null, 4, null, null, null, null, 1,
-      null, 6, 8, 7, null, null, 3, null, 9,
-      1, 2, null, null, 3, null, 5, null, 7
+      0, 0, 0, 4, 0, 0, 0, 0, 1,
+      0, 6, 8, 7, 0, 0, 3, 0, 9,
+      1, 2, 0, 0, 3, 0, 5, 0, 7
     ],
     board: [],
     solvedBoard: [
-      // 2, 7, 9, 3, 5, 6, 4, 1, 8,
-      // 6, 8, 3, 1, 7, 4, 9, 5, 2,
-      // 4, 5, 1, 2, 9, 8, 6, 7, 3,
-      // 7, 4, 5, 9, 1, 3, 8, 2, 6,
-      // 8, 3, 2, 5, 6, 7, 1, 9, 4,
-      // 9, 1, 6, 8, 4, 2, 7, 3, 5,
-      // 3, 9, 7, 4, 8, 5, 2, 6, 1,
-      // 5, 6, 8, 7, 2, 1, 3, 4, 9,
-      // 1, 2, 4, 6, 3, 9, 5, 8, 7
+      2, 7, 9, 3, 5, 6, 4, 1, 8,
+      6, 8, 3, 1, 7, 4, 9, 5, 2,
+      4, 5, 1, 2, 9, 8, 6, 7, 3,
+      7, 4, 5, 9, 1, 3, 8, 2, 6,
+      8, 3, 2, 5, 6, 7, 1, 9, 4,
+      9, 1, 6, 8, 4, 2, 7, 3, 5,
+      3, 9, 7, 4, 8, 5, 2, 6, 1,
+      5, 6, 8, 7, 2, 1, 3, 4, 9,
+      1, 2, 4, 6, 3, 9, 5, 8, 7
     ],
     zones: [
       [0, 1, 2, 9, 10, 11, 18, 19, 20],
@@ -112,7 +112,7 @@ class App extends React.Component {
       this.setState({ chosenCells: chosenCells })
       this.setState({ board: board })
     } else if
-    (!isNaN(value) && this.state.clickedCell !== null) {
+    ((!isNaN(value) || value === 0) && this.state.clickedCell !== null) {
       let board = [...this.state.board]
       board[this.state.clickedCell] = value * -1
       this.setState({ board: board })
@@ -222,7 +222,7 @@ class App extends React.Component {
 
   clickedCellHandler = (cell_index) => {
     //On ne peut changer qu'un case vide, ou autorisée (valeur stockée < 0 )
-    if (this.getValue(cell_index) === null || this.getValue(cell_index) < 0) {
+    if (this.getValue(cell_index) === null || this.getValue(cell_index) <= 0) {
       this.setState({ clickedCell: cell_index })
       return cell_index
     } else {
@@ -246,8 +246,7 @@ class App extends React.Component {
     let state = { ...this.state }
     let result = []
     for (let index = 0; index <= 80; index++) {
-      // result.push(state['board'][index] === null ? state['solvedBoard'][index] * -1 : state['board'][index])
-      result.push(state['initialBoard'][index] === null ? state['solvedBoard'][index] * -1 : state['initialBoard'][index])
+      result.push((state['initialBoard'][index] === null || state['initialBoard'][index] === 0) ? state['solvedBoard'][index] * -1 : state['initialBoard'][index])
     }
     this.setState({ board: result }, () => this.testValidity())
     //pour test
@@ -289,7 +288,7 @@ class App extends React.Component {
   render () {
     return <>
       <h1>Sudoku</h1>
-      <p>Restants : {this.state.board.filter(item => item === null).length}</p>
+      <p>Restants : {this.state.board.filter(item => (item === null || item === 0)).length}</p>
       <p>Zones Valides : {this.state.validZones.length}</p>
       <p>Colonnes valides : {this.state.validColumns.length} — Lignes Valides : {this.state.validRows.length} </p>
 
