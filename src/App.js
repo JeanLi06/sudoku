@@ -5,6 +5,7 @@ import './App.css'
 import Victory from './components/Victory'
 import Cell from './components/Cell'
 import Input from './components/Input'
+import { getSudoku } from 'fake-sudoku-puzzle-generator'
 
 //Les valeurs choisies par l'utilisateur sont représentées avec des nombre négatifs dans board
 //solvedBoard est la solution de la grille précalculée.
@@ -24,29 +25,17 @@ class App extends React.Component {
       null, 6, 8, 7, null, null, 3, null, 9,
       1, 2, null, null, 3, null, 5, null, 7
     ],
-    board: [
-      2, null, 9, null, 5, null, null, 1, 8,
-      6, null, 3, null, null, 4, 9, 5, null,
-      4, null, null, null, null, 8, null, null, null,
-
-      null, null, null, null, 1, 3, null, 2, 6,
-      8, null, null, 5, null, 7, null, null, 4,
-      9, 1, null, 8, 4, null, null, null, null,
-
-      null, null, null, 4, null, null, null, null, 1,
-      null, 6, 8, 7, null, null, 3, null, 9,
-      1, 2, null, null, 3, null, 5, null, 7
-    ],
+    board: [],
     solvedBoard: [
-      2, 7, 9, 3, 5, 6, 4, 1, 8,
-      6, 8, 3, 1, 7, 4, 9, 5, 2,
-      4, 5, 1, 2, 9, 8, 6, 7, 3,
-      7, 4, 5, 9, 1, 3, 8, 2, 6,
-      8, 3, 2, 5, 6, 7, 1, 9, 4,
-      9, 1, 6, 8, 4, 2, 7, 3, 5,
-      3, 9, 7, 4, 8, 5, 2, 6, 1,
-      5, 6, 8, 7, 2, 1, 3, 4, 9,
-      1, 2, 4, 6, 3, 9, 5, 8, 7
+      // 2, 7, 9, 3, 5, 6, 4, 1, 8,
+      // 6, 8, 3, 1, 7, 4, 9, 5, 2,
+      // 4, 5, 1, 2, 9, 8, 6, 7, 3,
+      // 7, 4, 5, 9, 1, 3, 8, 2, 6,
+      // 8, 3, 2, 5, 6, 7, 1, 9, 4,
+      // 9, 1, 6, 8, 4, 2, 7, 3, 5,
+      // 3, 9, 7, 4, 8, 5, 2, 6, 1,
+      // 5, 6, 8, 7, 2, 1, 3, 4, 9,
+      // 1, 2, 4, 6, 3, 9, 5, 8, 7
     ],
     zones: [
       [0, 1, 2, 9, 10, 11, 18, 19, 20],
@@ -65,6 +54,11 @@ class App extends React.Component {
     validRows: [],
     validColumns: [],
     validZones: []
+  }
+
+  //on initialise une copie de la grille initiale
+  componentDidMount () {
+    this.setState({ board: [...this.state.initialBoard] })
   }
 
   testValidity = () => {
@@ -168,7 +162,7 @@ class App extends React.Component {
 
   //Retourne true si une array fournie est valide
   // c.a.d. éléments uniques de 1 à 9
-  //On teste ainsi, une zone, une colonne ou une ligne
+  //On peut tester ainsi une zone, une colonne ou une ligne
   isArrayFromSudokuValid = (array_to_test) => {
     // On récupère les valeurs de cette zone, en les passant  en absolu, et les null en 0
     let values_in_array = array_to_test.map(item => item === null ? 0 : Math.abs(item))
@@ -256,6 +250,10 @@ class App extends React.Component {
       result.push(state['initialBoard'][index] === null ? state['solvedBoard'][index] * -1 : state['initialBoard'][index])
     }
     this.setState({ board: result }, () => this.testValidity())
+    //pour test
+    // console.log(getSudoku('Easy').flat())
+
+    this.solveBoardWithAPI()
   }
 
   //retourne un tableau dont les valeurs ont été mélangées aléatoirement
@@ -266,6 +264,26 @@ class App extends React.Component {
       [newArr[i], newArr[rand]] = [newArr[rand], newArr[i]]
     }
     return newArr
+  }
+
+  solveBoardWithAPI = () => {
+    const encodeBoard = (board) => board.reduce((result, row, i) => result + `%5B${encodeURIComponent(row)}%5D${i === board.length - 1 ? '' : '%2C'}`, '')
+
+    const encodeParams = (params) =>
+      Object.keys(params)
+        .map(key => key + '=' + `%5B${encodeBoard(params[key])}%5D`)
+        .join('&')
+
+    const data = { board: [[0, 0, 0, 0, 0, 0, 8, 0, 0], [0, 0, 4, 0, 0, 8, 0, 0, 9], [0, 7, 0, 0, 0, 0, 0, 0, 5], [0, 1, 0, 0, 7, 5, 0, 0, 8], [0, 5, 6, 0, 9, 1, 3, 0, 0], [7, 8, 0, 0, 0, 0, 0, 0, 0], [0, 2, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 9, 3, 0, 0, 1, 0], [0, 0, 5, 7, 0, 0, 4, 0, 3]] }
+
+    fetch('https://sugoku.herokuapp.com/solve', {
+      method: 'POST',
+      body: encodeParams(data),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
+      .then(response => response.json())
+      .then(response => console.log(response.solution))
+      .catch(console.warn)
   }
 
   render () {
