@@ -5,7 +5,6 @@ import './App.css'
 import Victory from './components/Victory'
 import Cell from './components/Cell'
 import Input from './components/Input'
-import { getSudoku } from 'fake-sudoku-puzzle-generator'
 
 //Les valeurs choisies par l'utilisateur sont représentées avec des nombre négatifs dans board
 //solvedBoard est la solution de la grille précalculée.
@@ -13,8 +12,8 @@ class App extends React.Component {
   //Un grille de sudoku facile et valide
   state = {
     initialBoard: [
-      2, 0, 9, 0, 5, 0, 0, 1, 8,
       6, 0, 3, 0, 0, 4, 9, 5, 0,
+      2, 0, 9, 0, 5, 0, 0, 1, 8,
       4, 0, 0, 0, 0, 8, 0, 0, 0,
 
       0, 0, 0, 0, 1, 3, 0, 2, 6,
@@ -26,17 +25,7 @@ class App extends React.Component {
       1, 2, 0, 0, 3, 0, 5, 0, 7
     ],
     board: [],
-    solvedBoard: [
-      2, 7, 9, 3, 5, 6, 4, 1, 8,
-      6, 8, 3, 1, 7, 4, 9, 5, 2,
-      4, 5, 1, 2, 9, 8, 6, 7, 3,
-      7, 4, 5, 9, 1, 3, 8, 2, 6,
-      8, 3, 2, 5, 6, 7, 1, 9, 4,
-      9, 1, 6, 8, 4, 2, 7, 3, 5,
-      3, 9, 7, 4, 8, 5, 2, 6, 1,
-      5, 6, 8, 7, 2, 1, 3, 4, 9,
-      1, 2, 4, 6, 3, 9, 5, 8, 7
-    ],
+    solvedBoard: [],
     zones: [
       [0, 1, 2, 9, 10, 11, 18, 19, 20],
       [3, 4, 5, 12, 13, 14, 21, 22, 23],
@@ -243,16 +232,21 @@ class App extends React.Component {
   }
 
   solveBoard = () => {
-    let state = { ...this.state }
-    let result = []
-    for (let index = 0; index <= 80; index++) {
-      result.push((state['initialBoard'][index] === null || state['initialBoard'][index] === 0) ? state['solvedBoard'][index] * -1 : state['initialBoard'][index])
-    }
-    this.setState({ board: result }, () => this.testValidity())
     //pour test
-    // console.log(getSudoku('Easy').flat())
+    //On met en forme la board pour la passer à l'API (sous-tableaux pour les lignes)
+    let initialBoarCopy = [...this.state.initialBoard]
 
-    this.solveBoardWithAPI()
+    let letModifiedBoard = []
+    while (initialBoarCopy.length > 0) letModifiedBoard.push(initialBoarCopy.splice(0, 9))
+    this.solveBoardWithAPI(letModifiedBoard)
+    // console.log(getSudoku('Easy').flat())
+    // let state = { ...this.state }
+    // let result = []
+    // for (let index = 0; index <= 80; index++) {
+    //   result.push((state['initialBoard'][index] === null || state['initialBoard'][index] === 0) ? state['solvedBoard'][index] * -1 : state['initialBoard'][index])
+    // }
+    // this.setState({ board: result }, () => this.testValidity())
+
   }
 
   //retourne un tableau dont les valeurs ont été mélangées aléatoirement
@@ -265,7 +259,19 @@ class App extends React.Component {
     return newArr
   }
 
-  solveBoardWithAPI = () => {
+  solvedBoardFromAPI = (response) => {
+    let state = { ...this.state }
+    let result = []
+    let boardFromAPI = response.flat()
+    for (let index = 0; index <= 80; index++) {
+      result.push((state['initialBoard'][index] === null ||
+        state['initialBoard'][index] === 0) ? boardFromAPI[index] * -1 : state['initialBoard'][index])
+    }
+    this.setState({ board: result }, () => this.testValidity())
+  }
+
+  //Retourne la solution
+  solveBoardWithAPI = (boardToSolve) => {
     const encodeBoard = (board) => board.reduce((result, row, i) => result + `%5B${encodeURIComponent(row)}%5D${i === board.length - 1 ? '' : '%2C'}`, '')
 
     const encodeParams = (params) =>
@@ -273,7 +279,7 @@ class App extends React.Component {
         .map(key => key + '=' + `%5B${encodeBoard(params[key])}%5D`)
         .join('&')
 
-    const data = { board: [[0, 0, 0, 0, 0, 0, 8, 0, 0], [0, 0, 4, 0, 0, 8, 0, 0, 9], [0, 7, 0, 0, 0, 0, 0, 0, 5], [0, 1, 0, 0, 7, 5, 0, 0, 8], [0, 5, 6, 0, 9, 1, 3, 0, 0], [7, 8, 0, 0, 0, 0, 0, 0, 0], [0, 2, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 9, 3, 0, 0, 1, 0], [0, 0, 5, 7, 0, 0, 4, 0, 3]] }
+    const data = { board: boardToSolve }
 
     fetch('https://sugoku.herokuapp.com/solve', {
       method: 'POST',
@@ -281,7 +287,7 @@ class App extends React.Component {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
       .then(response => response.json())
-      .then(response => console.log(response.solution))
+      .then(response => this.solvedBoardFromAPI(response.solution))
       .catch(console.warn)
   }
 
@@ -313,9 +319,8 @@ class App extends React.Component {
       </div>
       {!this.isBoardSolved() && <button
         style={{
-          backgroundColor: 'darkorange',
-          color: 'white',
-          padding: '5px'
+          backgroundColor: '#fedc10',
+          padding: '10px'
         }}
         onClick={this.solveBoard}>
         Résoudre !
