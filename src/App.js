@@ -5,6 +5,7 @@ import './App.css'
 import Victory from './components/Victory'
 import Cell from './components/Cell'
 import Input from './components/Input'
+import { getSudoku } from 'fake-sudoku-puzzle-generator'
 
 //Les valeurs choisies par l'utilisateur sont représentées avec des nombre négatifs dans board
 //solvedBoard est la solution de la grille précalculée.
@@ -12,17 +13,17 @@ class App extends React.Component {
   //Un grille de sudoku facile et valide
   state = {
     initialBoard: [
-      6, 0, 3, 0, 0, 4, 9, 5, 0,
-      2, 0, 9, 0, 5, 0, 0, 1, 8,
-      4, 0, 0, 0, 0, 8, 0, 0, 0,
-
-      0, 0, 0, 0, 1, 3, 0, 2, 6,
-      8, 0, 0, 5, 0, 7, 0, 0, 4,
-      9, 1, 0, 8, 4, 0, 0, 0, 0,
-
-      0, 0, 0, 4, 0, 0, 0, 0, 1,
-      0, 6, 8, 7, 0, 0, 3, 0, 9,
-      1, 2, 0, 0, 3, 0, 5, 0, 7
+      // 6, 0, 3, 0, 0, 4, 9, 5, 0,
+      // 2, 0, 9, 0, 5, 0, 0, 1, 8,
+      // 4, 0, 0, 0, 0, 8, 0, 0, 0,
+      //
+      // 0, 0, 0, 0, 1, 3, 0, 2, 6,
+      // 8, 0, 0, 5, 0, 7, 0, 0, 4,
+      // 9, 1, 0, 8, 4, 0, 0, 0, 0,
+      //
+      // 0, 0, 0, 4, 0, 0, 0, 0, 1,
+      // 0, 6, 8, 7, 0, 0, 3, 0, 9,
+      // 1, 2, 0, 0, 3, 0, 5, 0, 7
     ],
     board: [],
     solvedBoard: [],
@@ -45,9 +46,11 @@ class App extends React.Component {
     validZones: []
   }
 
-  //on initialise une copie de la grille initiale
-  componentDidMount () {
-    this.setState({ board: [...this.state.initialBoard] })
+  async componentDidMount () {
+    await this.generateBoard()
+    let initialBoardCopy = [...this.state.initialBoard]
+    //on initialise une copie de la grille initiale
+    this.setState({ board: initialBoardCopy }, this.testValidity)
   }
 
   testValidity = () => {
@@ -63,7 +66,7 @@ class App extends React.Component {
       if (this.isColumnValid(column)) {
         validColumns.push(column)
       }
-      this.setState(this.state.validColumns = validColumns)
+      this.setState({ validColumns: validColumns })
     }
   }
 
@@ -85,8 +88,8 @@ class App extends React.Component {
       if (this.isZoneValid(zone)) {
         validZones.push(zone)
       }
-      this.setState(this.state.validZones = validZones)
     }
+    this.setState({ validZones: validZones })
   }
 
   // Remplace la valeur dans la board, à l'index présent dans le state par la valeur transmise,
@@ -154,7 +157,7 @@ class App extends React.Component {
   //On peut tester ainsi une zone, une colonne ou une ligne
   isArrayFromSudokuValid = (array_to_test) => {
     // On récupère les valeurs de cette zone, en les passant  en absolu, et les null en 0
-    let values_in_array = array_to_test.map(item => item === null ? 0 : Math.abs(item))
+    let values_in_array = array_to_test.map(item => (item === null || item === 0) ? 0 : Math.abs(item))
     //On enlève les répétitions (dans un Set, les valeurs sont uniques...)
     const unique_values_in_zone = [...new Set(values_in_array)]
     // On réduit la zone à une somme des ses éléments
@@ -231,46 +234,46 @@ class App extends React.Component {
     }
   }
 
+  generateBoard = () => {
+    // let state = { ...this.state }
+    let newBoard = getSudoku('VeryEasy').flat()
+    this.setState({ initialBoard: newBoard }, () => this.testValidity())
+  }
+
   solveBoard = () => {
     //pour test
     //On met en forme la board pour la passer à l'API (sous-tableaux pour les lignes)
-    let initialBoarCopy = [...this.state.initialBoard]
-
-    let letModifiedBoard = []
-    while (initialBoarCopy.length > 0) letModifiedBoard.push(initialBoarCopy.splice(0, 9))
-    this.solveBoardWithAPI(letModifiedBoard)
-    // console.log(getSudoku('Easy').flat())
-    // let state = { ...this.state }
-    // let result = []
-    // for (let index = 0; index <= 80; index++) {
-    //   result.push((state['initialBoard'][index] === null || state['initialBoard'][index] === 0) ? state['solvedBoard'][index] * -1 : state['initialBoard'][index])
-    // }
-    // this.setState({ board: result }, () => this.testValidity())
-
+    let initialBoardCopy = [...this.state.initialBoard]
+    let boardToSolve = []
+    initialBoardCopy = initialBoardCopy.map(item => item === null ? 0 : item)
+    while (initialBoardCopy.length > 8) boardToSolve.push(initialBoardCopy.splice(0, 9))
+    this.solveBoardWithAPI(boardToSolve)
   }
 
   //retourne un tableau dont les valeurs ont été mélangées aléatoirement
-  getShuffledArray = arr => {
-    const newArr = arr.slice()
-    for (let i = newArr.length - 1; i > 0; i--) {
-      const rand = Math.floor(Math.random() * (i + 1));
-      [newArr[i], newArr[rand]] = [newArr[rand], newArr[i]]
-    }
-    return newArr
-  }
+  // getShuffledArray = arr => {
+  //   const newArr = arr.slice()
+  //   for (let i = newArr.length - 1; i > 0; i--) {
+  //     const rand = Math.floor(Math.random() * (i + 1));
+  //     [newArr[i], newArr[rand]] = [newArr[rand], newArr[i]]
+  //   }
+  //   return newArr
+  // }
 
   solvedBoardFromAPI = (response) => {
     let state = { ...this.state }
-    let result = []
+    let boardSolved = []
     let boardFromAPI = response.flat()
     for (let index = 0; index <= 80; index++) {
-      result.push((state['initialBoard'][index] === null ||
+      //TODO enlever le null
+      //On génère la nouvelle grille, en gardant les cases vides initiales modifiables,
+      // et les cases initiales non-modifiables
+      boardSolved.push((state['initialBoard'][index] === null ||
         state['initialBoard'][index] === 0) ? boardFromAPI[index] * -1 : state['initialBoard'][index])
     }
-    this.setState({ board: result }, () => this.testValidity())
+    this.setState({ board: boardSolved }, () => this.testValidity())
   }
 
-  //Retourne la solution
   solveBoardWithAPI = (boardToSolve) => {
     const encodeBoard = (board) => board.reduce((result, row, i) => result + `%5B${encodeURIComponent(row)}%5D${i === board.length - 1 ? '' : '%2C'}`, '')
 

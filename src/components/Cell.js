@@ -74,9 +74,7 @@ const Cell = ({
       clickedCellHandler(cell_index)
     }}
   >
-    {/*{(cell_value !== null || cell_value !== 0) ? Math.abs(cell_value) : null}*/}
-    {cell_value !== null  && Math.abs(cell_value) ||
-    cell_value === 0 && null}
+    {(cell_value !== null  && Math.abs(cell_value)) || cell_value === 0}
   </Cell>
 }
 
