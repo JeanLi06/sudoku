@@ -5,15 +5,23 @@
     height: auto;
 }
 
-.allowed-hover{
+h1 {
+    font-family: 'Aladin', cursive;
+    border: 1px black solid;
+    width: fit-content;
+    padding: 0 10px;
+    margin: 10px auto;
+}
+
+.allowed-hover {
     background-color: rgba(166, 43, 255, 0.47);
 }
 
 
-.span-column{
+.span-column {
     border-right: solid 3px rgb(106, 43, 176);
 }
 
-.span-row{
+.span-row {
     border-bottom: solid 3px rgb(106, 43, 176);
 }

@@ -8,7 +8,6 @@ import Input from './components/Input'
 import { getSudoku } from 'fake-sudoku-puzzle-generator'
 
 //Les valeurs choisies par l'utilisateur sont représentées avec des nombre négatifs dans board
-//solvedBoard est la solution de la grille précalculée.
 class App extends React.Component {
   //Un grille de sudoku facile et valide
   state = {
@@ -26,7 +25,6 @@ class App extends React.Component {
       // 1, 2, 0, 0, 3, 0, 5, 0, 7
     ],
     board: [],
-    solvedBoard: [],
     zones: [
       [0, 1, 2, 9, 10, 11, 18, 19, 20],
       [3, 4, 5, 12, 13, 14, 21, 22, 23],
@@ -52,6 +50,8 @@ class App extends React.Component {
     //on initialise une copie de la grille initiale
     this.setState({ board: initialBoardCopy }, this.testValidity)
   }
+
+
 
   testValidity = () => {
     this.testColumns()
@@ -235,9 +235,9 @@ class App extends React.Component {
   }
 
   generateBoard = () => {
-    // let state = { ...this.state }
     let newBoard = getSudoku('VeryEasy').flat()
-    this.setState({ initialBoard: newBoard }, () => this.testValidity())
+    this.setState({ initialBoard: newBoard })
+    this.setState({ board: newBoard }, () => this.testValidity())
   }
 
   solveBoard = () => {
@@ -320,17 +320,32 @@ class App extends React.Component {
           testRows={this.testRows}
         />
       </div>
-      {!this.isBoardSolved() && <button
-        style={{
-          backgroundColor: '#fedc10',
-          padding: '10px'
-        }}
-        onClick={this.solveBoard}>
-        Résoudre !
-      </button>}
-      {this.isBoardSolved() && <Victory/>}
-    </>
-  }
-}
+      <div>
+        <button
+          style={{
+            backgroundColor: 'darkorange',
+            color: 'white',
+            padding: '5 10px',
+            fontSize: '18px',
+            marginRight: '10px'
+          }}
+          onClick={this.generateBoard}>
+          Générer
+        </button>
+        {!this.isBoardSolved() && <button
+          style={{
+            backgroundColor: '#fedc10',
+            padding: '5 10px',
+            fontSize: '18px',
+            marginLeft: '10px'
+          }}
+          onClick={this.solveBoard}>
+          Résoudre !
+        </button>}
+        </div>
+        {this.isBoardSolved() && <Victory/>}
+      </>
+      }
+      }
 
-export default App
+      export default App
