@@ -17,6 +17,10 @@ h1 {
     background-color: rgba(166, 43, 255, 0.47);
 }
 
+.Difficulty:hover{
+    color: darkorange;
+}
+
 
 .span-column {
     border-right: solid 3px rgb(106, 43, 176);

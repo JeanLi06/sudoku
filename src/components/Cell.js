@@ -5,8 +5,7 @@ import styled from 'styled-components'
 // pour séparer les régions. Index de 0 à 80.
 const Cell = ({
                 cell_index, cell_value, getCoordonates, getValue,
-                clickedCellHandler, getClickedCell,
-                validRows, validColumns, validZones
+                clickedCellHandler, getClickedCell
               }) => {
 
   const cell_background_color = `#fedc10`
@@ -74,7 +73,7 @@ const Cell = ({
       clickedCellHandler(cell_index)
     }}
   >
-    {(cell_value !== null  && Math.abs(cell_value)) || cell_value === 0}
+    {(cell_value !== null && Math.abs(cell_value)) || cell_value === 0}
   </Cell>
 }
 

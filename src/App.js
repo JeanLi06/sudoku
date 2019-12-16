@@ -5,6 +5,7 @@ import './App.css'
 import Victory from './components/Victory'
 import Cell from './components/Cell'
 import Input from './components/Input'
+import Difficulty from './components/Difficulty'
 import { getSudoku } from 'fake-sudoku-puzzle-generator'
 
 //Les valeurs choisies par l'utilisateur sont représentées avec des nombre négatifs dans board
@@ -41,7 +42,8 @@ class App extends React.Component {
     clickedUserNumber: null, //La valeur choisie
     validRows: [],
     validColumns: [],
-    validZones: []
+    validZones: [],
+    difficulty: 'VeryEasy'
   }
 
   async componentDidMount () {
@@ -50,8 +52,6 @@ class App extends React.Component {
     //on initialise une copie de la grille initiale
     this.setState({ board: initialBoardCopy }, this.testValidity)
   }
-
-
 
   testValidity = () => {
     this.testColumns()
@@ -235,7 +235,7 @@ class App extends React.Component {
   }
 
   generateBoard = () => {
-    let newBoard = getSudoku('VeryEasy').flat()
+    let newBoard = getSudoku(this.state.difficulty).flat()
     this.setState({ initialBoard: newBoard })
     this.setState({ board: newBoard }, () => this.testValidity())
   }
@@ -294,6 +294,29 @@ class App extends React.Component {
       .catch(console.warn)
   }
 
+  handleDifficulty = (event) => {
+    let difficulty = null
+    switch (event.target.innerText.trim()) {
+      case 'Très facile':
+        difficulty = 'VeryEasy'
+        break
+      case 'Facile':
+        difficulty = 'Easy'
+        break
+      case 'Moyen':
+        difficulty = 'Medium'
+        break
+      case 'Difficile':
+        difficulty = 'Hard'
+        break
+      default:
+        difficulty = 'VeryEasy'
+    }
+    this.setState({ difficulty }, () => {
+      console.log('this.state.difficulty', { difficulty })
+    })
+  }
+
   render () {
     return <>
       <h1>Sudoku</h1>
@@ -320,32 +343,39 @@ class App extends React.Component {
           testRows={this.testRows}
         />
       </div>
+      <Difficulty
+        className="Difficulty"
+        handleDifficulty={this.handleDifficulty}
+        difficulty={this.state.difficulty}
+      />
       <div>
         <button
           style={{
             backgroundColor: 'darkorange',
             color: 'white',
-            padding: '5 10px',
+            padding: '5px 10px',
             fontSize: '18px',
-            marginRight: '10px'
+            marginRight: '10px',
+            border: 'none'
           }}
           onClick={this.generateBoard}>
           Générer
         </button>
         {!this.isBoardSolved() && <button
           style={{
-            backgroundColor: '#fedc10',
-            padding: '5 10px',
+            backgroundColor: '#BADA55',
+            padding: '5px 10px',
             fontSize: '18px',
-            marginLeft: '10px'
+            marginLeft: '10px',
+            border: 'none'
           }}
           onClick={this.solveBoard}>
           Résoudre !
         </button>}
-        </div>
-        {this.isBoardSolved() && <Victory/>}
-      </>
-      }
-      }
+      </div>
+      {this.isBoardSolved() && <Victory/>}
+    </>
+  }
+}
 
-      export default App
+export default App
